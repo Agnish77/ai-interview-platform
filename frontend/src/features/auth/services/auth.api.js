@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE = `${import.meta.env.VITE_API_URL || "http://localhost:3000"}/api/auth`;
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"}/api/auth`;
 
 // Attach token to every request if present
 const getAuthHeaders = () => {

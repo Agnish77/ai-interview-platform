@@ -4,7 +4,7 @@ import { io } from "socket.io-client";
 import { getSession, createSession } from "../services/interview.api.js";
 import { useInterview } from "../interview.context.jsx";
 
-const SOCKET_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+const SOCKET_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
 
 /**
  * MockInterview page

@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const _API = import.meta.env.VITE_API_URL || "http://localhost:3000";
-const API_BASE = `${_API}/api/interview`;
-const SESSION_BASE = `${_API}/api/sessions`;
-const AUTH_BASE = `${_API}/api/auth`;
+const BASE = import.meta.env.VITE_API_BASE_URL || "http://localhost:3000";
+const API_BASE = `${BASE}/api/interview`;
+const SESSION_BASE = `${BASE}/api/sessions`;
+const AUTH_BASE = `${BASE}/api/auth`;
 
 const getAuthHeaders = () => {
     const token = localStorage.getItem("token");
