@@ -81,21 +81,49 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
-      - name: Install Playwright
+      - name: Install Playwright deps
         run: |
           npm install @playwright/test
           npx playwright install --with-deps chromium
 
-      - name: Start services
+      - name: Build & start Docker services
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET || 'ci_test_secret_123' }}
+          JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET || 'ci_refresh_secret_123' }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY || 'dummy_key_for_e2e' }}
         run: |
+          docker compose build
           docker compose up -d
-          sleep 15  # wait for services to be ready
+
+      - name: Wait for frontend to be ready
+        run: |
+          echo "Waiting for frontend on http://localhost ..."
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost/ > /dev/null 2>&1; then
+              echo "Frontend is up!"
+              break
+            fi
+            echo "Attempt $i/30 — not ready yet, waiting 5s..."
+            sleep 5
+          done
+          curl -sf http://localhost/ || (echo "Frontend never became ready" && docker compose logs && exit 1)
+
+      - name: Wait for backend to be ready
+        run: |
+          echo "Waiting for backend on http://localhost:3000/api/health ..."
+          for i in $(seq 1 20); do
+            if curl -sf http://localhost:3000/api/health > /dev/null 2>&1; then
+              echo "Backend is up!"
+              break
+            fi
+            echo "Attempt $i/20 — not ready yet, waiting 5s..."
+            sleep 5
+          done
+          curl -sf http://localhost:3000/api/health || (echo "Backend never became ready" && docker compose logs backend && exit 1)
 
       - name: Run E2E tests
         env:
+          CI: "true"
           PLAYWRIGHT_TEST_BASE_URL: http://localhost
         run: npx playwright test
 
@@ -105,6 +133,10 @@ jobs:
         with:
           name: playwright-report
           path: playwright-report/
+
+      - name: Dump container logs on failure
+        if: failure()
+        run: docker compose logs
 
       - name: Stop services
         if: always()
