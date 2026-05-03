@@ -1,0 +1,13 @@
+﻿
+> frontend@0.0.0 lint
+> eslint .
+
+
+C:\Users\agnis\Downloads\gen-ai proj\frontend\src\app.routes.jsx
+  5:23  error  'createBrowserRouter' is not defined  no-undef
+
+C:\Users\agnis\Downloads\gen-ai proj\frontend\src\features\auth\pages\Register.jsx
+  9:16  error  'Register' is not defined  no-undef
+
+Γ£û 2 problems (2 errors, 0 warnings)
+

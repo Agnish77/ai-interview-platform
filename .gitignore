@@ -1,0 +1,30 @@
+# Node / Build artifacts
+node_modules/
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.production
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Test coverage
+coverage/
+
+# Playwright
+playwright-report/
+test-results/
+
+# Temp
+*.tmp
+gemini-models.js
+appp.py
+appu.py

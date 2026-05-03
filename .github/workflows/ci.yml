@@ -1,0 +1,125 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  # ── Lint + Unit Tests ──────────────────────────────────────────────────────
+  test:
+    name: Lint & Unit Tests
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install backend deps
+        run: npm ci
+        working-directory: backend
+
+      - name: Run backend tests
+        working-directory: backend
+        env:
+          MONGO_URI: mongodb://localhost:27017/test
+          JWT_SECRET: test_secret_ci
+          GOOGLE_API_KEY: dummy_key_for_tests
+        run: npm test -- --forceExit
+
+      - name: Install frontend deps
+        run: npm ci
+        working-directory: frontend
+
+      - name: Run frontend tests
+        working-directory: frontend
+        run: npm test -- --run
+
+  # ── Docker Build ───────────────────────────────────────────────────────────
+  docker-build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    needs: test
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build backend image
+        run: docker build -t ai-interview-backend ./backend
+
+      - name: Build frontend image
+        run: docker build -t ai-interview-frontend ./frontend
+
+  # ── E2E (main branch only) ─────────────────────────────────────────────────
+  e2e:
+    name: E2E Tests (Playwright)
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Playwright
+        run: |
+          npm install @playwright/test
+          npx playwright install --with-deps chromium
+
+      - name: Start services
+        env:
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+        run: |
+          docker compose up -d
+          sleep 15  # wait for services to be ready
+
+      - name: Run E2E tests
+        run: npx playwright test
+
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+
+      - name: Stop services
+        if: always()
+        run: docker compose down
+
+  # ── Deploy (main only, after E2E) ──────────────────────────────────────────
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    needs: e2e
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: Trigger Render Backend Deploy
+        if: vars.RENDER_BACKEND_HOOK != ''
+        run: curl -X POST ${{ vars.RENDER_BACKEND_HOOK }}
+
+      - name: Trigger Vercel Frontend Deploy
+        if: vars.VERCEL_DEPLOY_HOOK != ''
+        run: curl -X POST ${{ vars.VERCEL_DEPLOY_HOOK }}

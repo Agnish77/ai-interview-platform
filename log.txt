@@ -1,0 +1,17 @@
+2026-04-23 20:54:07,667 - INFO - info
+2026-04-23 20:54:07,668 - WARNING - warning
+2026-04-23 20:54:07,669 - ERROR - error
+2026-04-23 20:54:07,669 - CRITICAL - critical
+2026-04-23 20:54:07,669 - INFO - The value of x is 2
+2026-04-23 20:54:07,669 - ERROR - ZeroDivisionError
+Traceback (most recent call last):
+  File "C:\Users\agnis\Downloads\gen-ai proj\appp.py", line 16, in <module>
+    1/0
+    ~^~
+ZeroDivisionError: division by zero
+2026-04-23 20:54:07,689 - ERROR - ZeroDivisionError
+Traceback (most recent call last):
+  File "C:\Users\agnis\Downloads\gen-ai proj\appp.py", line 22, in <module>
+    1/0
+    ~^~
+ZeroDivisionError: division by zero
