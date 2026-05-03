@@ -95,6 +95,8 @@ jobs:
           sleep 15  # wait for services to be ready
 
       - name: Run E2E tests
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: http://localhost
         run: npx playwright test
 
       - name: Upload Playwright report

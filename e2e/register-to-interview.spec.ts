@@ -1,6 +1,6 @@
 import { test, expect } from "@playwright/test";
 
-const BASE_URL = "http://localhost:5173";
+const BASE_URL = process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:5173";
 
 // Helper: fill the register form using stable IDs
 async function fillRegisterForm(page: any, user: { username: string; email: string; password: string }) {

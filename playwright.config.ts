@@ -6,7 +6,7 @@ export default defineConfig({
     retries: 1,
     reporter: "html",
     use: {
-        baseURL: "http://localhost:5173",
+        baseURL: process.env.PLAYWRIGHT_TEST_BASE_URL || "http://localhost:5173",
         trace: "on-first-retry",
         screenshot: "only-on-failure"
     },
@@ -16,7 +16,7 @@ export default defineConfig({
             use: { ...devices["Desktop Chrome"] }
         }
     ],
-    webServer: [
+    webServer: process.env.CI ? undefined : [
         {
             command: "cd backend && npm run dev",
             port: 3000,
