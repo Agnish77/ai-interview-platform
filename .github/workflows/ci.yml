@@ -32,7 +32,7 @@ jobs:
           cache-dependency-path: backend/package-lock.json
 
       - name: Install backend deps
-        run: npm ci
+        run: npm install
         working-directory: backend
 
       - name: Run backend tests
@@ -44,7 +44,7 @@ jobs:
         run: npm test -- --forceExit
 
       - name: Install frontend deps
-        run: npm ci
+        run: npm install
         working-directory: frontend
 
       - name: Run frontend tests
