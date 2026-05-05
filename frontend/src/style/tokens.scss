@@ -1,0 +1,35 @@
+$bg-main: #1A1F36;
+$bg-card: #2A2F48;
+$bg-input: #23252E;
+$text-main: #E5E8EB;
+$text-muted: #8F9098;
+$text-secondary: #C0C1C7;
+$border-color: #2F313D;
+$accent-pink: #FF006E;
+$accent-purple: #B400FF;
+$accent-gradient: linear-gradient(90deg, #FF006E, #B400FF);
+
+:root {
+  --color-bg-main: #{$bg-main};
+  --color-bg-card: #{$bg-card};
+  --color-bg-input: #{$bg-input};
+  --color-text-main: #{$text-main};
+  --color-text-muted: #{$text-muted};
+  --color-text-secondary: #{$text-secondary};
+  --color-border: #{$border-color};
+  --color-accent-pink: #{$accent-pink};
+  --color-accent-purple: #{$accent-purple};
+  --color-accent-gradient: #{$accent-gradient};
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --transition-fast: 0.2s ease;
+}
+
+[data-theme="light"] {
+  --color-bg-main: #F5F7FA;
+  --color-bg-card: #FFFFFF;
+  --color-bg-input: #F0F2F5;
+  --color-text-main: #1A1F36;
+  --color-text-muted: #6B7280;
+  --color-text-secondary: #4B5563;
+  --color-border: #E5E7EB;
+}

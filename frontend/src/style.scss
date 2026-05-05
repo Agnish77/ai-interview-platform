@@ -1,16 +1,15 @@
 * {
-    margin: 0%;
-    padding: 0%;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
 
 html,
-
 body,
 #root {
     width: 100%;
-    background-color: #161616;
-    color: #fff;
-    font-family: 'Poppins', sans-serif;
-
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
