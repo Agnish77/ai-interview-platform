@@ -29,7 +29,7 @@ An AI‑powered interview preparation platform that analyses your resume against
 ## Quick Start (Local)
 
 1. Clone the repo and install dependencies:
-   
+   ```bash
    git clone https://github.com/agnish77/ai-interview-platform.git
    cd ai-interview-platform
    cd backend && npm install
@@ -38,21 +38,21 @@ An AI‑powered interview preparation platform that analyses your resume against
 2. Set up environment variables:
    - Copy `backend/.env.example` to `backend/.env` and fill in your MongoDB URI, Gemini API key, and JWT secrets.
 3. Run the backend and frontend:
-   
+   ```bash
    cd backend && npm run dev
    cd frontend && npm run dev
    ```
 4. Open `http://localhost:5173`.
 
 ## Running with Docker
-
+```bash
 docker-compose up --build
 ```
 Frontend: `http://localhost:8080`  
 Backend: `http://localhost:3000`
 
 ## Testing
-
+```bash
 # Backend unit + integration
 cd backend && npm test
 
@@ -69,4 +69,3 @@ The backend follows a service‑repository pattern; the frontend uses a feature�
 ## Contact
 Built by [Agnish Paul](https://www.linkedin.com/in/agnishpaul/). Feel free to connect on LinkedIn or open an issue.
 ```
-
