@@ -7,7 +7,7 @@ An AI‑powered interview preparation platform that analyses your resume against
 
 **Live Demo:** [ai-interview-platform-tau-blush.vercel.app](https://ai-interview-platform-tau-blush.vercel.app)
 
-**Watch 2-min demo:** https://www.loom.com/share/e86ce58706534820affadddcece33fd4
+**Watch 7-min demo:** https://www.loom.com/share/e86ce58706534820affadddcece33fd4
 
 ## Features
 
