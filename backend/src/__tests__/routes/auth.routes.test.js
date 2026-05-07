@@ -8,12 +8,12 @@ let mongo;
 beforeAll(async () => {
     mongo = await MongoMemoryServer.create();
     await mongoose.connect(mongo.getUri());
-});
+}, 30000);
 
 afterAll(async () => {
     await mongoose.disconnect();
     await mongo.stop();
-});
+}, 30000);
 
 afterEach(async () => {
     const collections = mongoose.connection.collections;

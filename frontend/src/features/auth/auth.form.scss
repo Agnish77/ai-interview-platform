@@ -1,13 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 // === Design Tokens (matching home.scss) ===
-$bg-main: #0B0C10;
-$bg-card: #181A20;
-$bg-input: #23252E;
-$text-main: #FFFFFF;
-$text-muted: #8F9098;
-$text-secondary: #C0C1C7;
-$border-color: #2F313D;
+$bg-main: var(--color-bg-main);
+$bg-card: var(--color-bg-card);
+$bg-input: var(--color-bg-input);
+$text-main: var(--color-text-main);
+$text-muted: var(--color-text-muted);
+$text-secondary: var(--color-text-secondary);
+$border-color: var(--color-border);
 $border-focus: #FF006E;
 $accent-pink: #FF006E;
 $accent-purple: #B400FF;

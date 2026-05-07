@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
-import { generateStrategy, generateResume } from "./services/interview.api.js";
+import { generateStrategy, downloadResume as fetchResumePdf } from "./services/interview.api.js";
 
 const InterviewContext = createContext(null);
 
@@ -54,11 +54,11 @@ export const InterviewProvider = ({ children }) => {
         setResumeLoading(true);
         setError(null);
         try {
-            const blob = await generateResume(jobDescription, selfDescription, strategyId);
+            const blob = await fetchResumePdf(strategyId, jobDescription, selfDescription, resumeText);
             const url = window.URL.createObjectURL(blob);
             const link = document.createElement("a");
             link.href = url;
-            link.download = "ai-generated-resume.txt";
+            link.download = "ai-generated-resume.pdf";
             document.body.appendChild(link);
             link.click();
             link.remove();

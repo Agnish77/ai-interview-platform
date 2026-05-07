@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router";
 import { useAuth } from "../services/auth.context.js";
 import "../auth.form.scss";
@@ -7,7 +7,12 @@ const validateEmail = (email) => /^\S+@\S+\.\S+$/.test(email);
 
 const Login = () => {
     const navigate = useNavigate();
-    const { login } = useAuth();
+    const { login, isAuthenticated } = useAuth();
+
+    // Navigate as soon as auth state confirms login
+    useEffect(() => {
+        if (isAuthenticated) navigate("/home");
+    }, [isAuthenticated, navigate]);
 
     const [form, setForm] = useState({ email: "", password: "" });
     const [errors, setErrors] = useState({});
@@ -48,11 +53,10 @@ const Login = () => {
         setLoading(true);
         const result = await login(form.email, form.password);
         setLoading(false);
-        if (result.success) {
-            navigate("/home");
-        } else {
+        if (!result.success) {
             setServerError(result.message || "Network Error: Please make sure the server is running.");
         }
+        // Navigation handled by useEffect above
     };
 
     return (

@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { loginUser, registerUser, logoutUser, getCurrentUser } from "./auth.api.js";
+import apiClient from "./api.client.js";
 
 const AuthContext = createContext(null);
 
@@ -10,27 +11,59 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // On mount, try to restore session from localStorage
+    // Helper: fully clear auth state
+    const clearAuth = useCallback(() => {
+        localStorage.removeItem("token");
+        setToken(null);
+        setUser(null);
+        setIsAuthenticated(false);
+    }, []);
+
+    // Listen for session expiry event dispatched by the shared api.client interceptor
+    useEffect(() => {
+        const handleExpired = () => {
+            clearAuth();
+            // Redirect to login page
+            window.location.href = "/login";
+        };
+        window.addEventListener("auth:expired", handleExpired);
+        return () => window.removeEventListener("auth:expired", handleExpired);
+    }, [clearAuth]);
+
+    // On mount: restore session from localStorage token
     useEffect(() => {
         const restoreSession = async () => {
             const savedToken = localStorage.getItem("token");
-            if (savedToken) {
+            if (!savedToken) {
+                setLoading(false);
+                return;
+            }
+            try {
+                // Try fetching current user (token is attached by apiClient interceptor)
+                const data = await getCurrentUser();
+                setUser(data.user);
+                setToken(savedToken);
+                setIsAuthenticated(true);
+            } catch {
+                // /me failed — attempt a silent token refresh before giving up
                 try {
-                    const data = await getCurrentUser();
-                    setUser(data.user);
-                    setToken(savedToken);
+                    const { data } = await apiClient.post("/api/auth/refresh", {});
+                    const newToken = data.token;
+                    localStorage.setItem("token", newToken);
+                    setToken(newToken);
+                    const userData = await getCurrentUser();
+                    setUser(userData.user);
                     setIsAuthenticated(true);
                 } catch {
-                    // Token invalid/expired
-                    localStorage.removeItem("token");
-                    setToken(null);
-                    setIsAuthenticated(false);
+                    // Refresh also failed — clear everything
+                    clearAuth();
                 }
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
         };
         restoreSession();
-    }, []);
+    }, [clearAuth]);
 
     const login = useCallback(async (email, password) => {
         setError(null);
@@ -68,11 +101,8 @@ export const AuthProvider = ({ children }) => {
         try {
             await logoutUser();
         } catch { /* ignore */ }
-        localStorage.removeItem("token");
-        setToken(null);
-        setUser(null);
-        setIsAuthenticated(false);
-    }, []);
+        clearAuth();
+    }, [clearAuth]);
 
     const clearError = useCallback(() => setError(null), []);
 

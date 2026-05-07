@@ -1,44 +1,34 @@
-import axios from "axios";
+import apiClient from "./api.client.js";
 
-const API_BASE = `${import.meta.env.VITE_API_BASE_URL || "http://localhost:3000"}/api/auth`;
-
-// Attach token to every request if present
-const getAuthHeaders = () => {
-    const token = localStorage.getItem("token");
-    return token ? { Authorization: `Bearer ${token}` } : {};
-};
+const API_BASE = "/api/auth";
 
 export const loginUser = async (email, password) => {
-    const response = await axios.post(
+    const response = await apiClient.post(
         `${API_BASE}/login`,
-        { email, password },
-        { withCredentials: true }
+        { email, password }
     );
     return response.data;
 };
 
 export const registerUser = async (username, email, password) => {
-    const response = await axios.post(
+    const response = await apiClient.post(
         `${API_BASE}/register`,
-        { username, email, password },
-        { withCredentials: true }
+        { username, email, password }
     );
     return response.data;
 };
 
 export const logoutUser = async () => {
-    const response = await axios.post(
+    const response = await apiClient.post(
         `${API_BASE}/logout`,
-        {},
-        { withCredentials: true, headers: getAuthHeaders() }
+        {}
     );
     return response.data;
 };
 
 export const getCurrentUser = async () => {
-    const response = await axios.get(
-        `${API_BASE}/me`,
-        { withCredentials: true, headers: getAuthHeaders() }
+    const response = await apiClient.get(
+        `${API_BASE}/me`
     );
     return response.data;
 };
