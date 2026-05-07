@@ -52,7 +52,7 @@ Respond with ONLY a valid JSON object (no markdown, no code blocks) in exactly t
 Generate 5-7 focus areas, 8-10 practice questions, and 5-6 general tips. Be specific to this exact job description.`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash-lite-001",
+    model: "gemini-2.5-flash-lite",
     contents: prompt
   });
 
@@ -89,7 +89,7 @@ Generate a complete professional resume in clean plain text format with the foll
 Use clean formatting with --- separators between sections. Make it look professional and ATS-friendly. Tailor every section to the job description.`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash-lite-001",
+    model: "gemini-2.5-flash-lite",
     contents: prompt
   });
 
@@ -124,7 +124,7 @@ Generate a complete professional resume in clean plain text format with the foll
 Use clean formatting with --- separators between sections. Make it look professional and ATS-friendly.`;
 
   const stream = await ai.models.generateContentStream({
-    model: "gemini-2.0-flash-lite-001",
+    model: "gemini-2.5-flash-lite",
     contents: prompt
   });
 
@@ -163,7 +163,7 @@ Respond with ONLY a valid JSON object (no markdown, no code blocks):
 }`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash-lite-001",
+    model: "gemini-2.5-flash-lite",
     contents: prompt
   });
 
@@ -193,7 +193,7 @@ Provide a personalized final assessment of the candidate's performance. Respond 
 }`;
 
   const response = await ai.models.generateContent({
-    model: "gemini-2.0-flash-lite-001",
+    model: "gemini-2.5-flash-lite",
     contents: prompt
   });
 
