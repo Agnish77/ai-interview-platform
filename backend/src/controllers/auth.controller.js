@@ -7,7 +7,7 @@ const jwt = require("jsonwebtoken");
 // ─── Token helpers ────────────────────────────────────────────────────────────
 
 function signAccessToken(payload) {
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "15m" });
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "30m" });
 }
 
 function signRefreshToken(payload) {
@@ -20,7 +20,7 @@ function setRefreshCookie(res, token) {
     res.cookie("refreshToken", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
         maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
 }
@@ -78,8 +78,8 @@ async function registerUserController(req, res) {
         res.cookie("token", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 15 * 60 * 1000
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 30 * 60 * 1000
         });
 
         res.status(201).json({
@@ -133,8 +133,8 @@ async function loginUserController(req, res) {
         res.cookie("token", accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 15 * 60 * 1000
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 30 * 60 * 1000
         });
 
         res.status(200).json({
@@ -192,8 +192,8 @@ async function refreshTokenController(req, res) {
         res.cookie("token", newAccessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 15 * 60 * 1000
+            sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+            maxAge: 30 * 60 * 1000
         });
 
         res.status(200).json({ token: newAccessToken });
